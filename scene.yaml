@@ -1,0 +1,84 @@
+scene:
+  background:
+   color: '#222'
+sources:
+  01:
+    type: MVT
+    url: 01/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  21:
+    type: MVT
+    url: 21/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  31:
+    type: MVT
+    url: 31/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  32:
+    type: MVT
+    url: 32/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  51:
+    type: MVT
+    url: 51/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  81:
+    type: MVT
+    url: 81/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  l82:
+    type: MVT
+    url: 82/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  83:
+    type: MVT
+    url: 83/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  86:
+    type: MVT
+    url: 86/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  88:
+    type: MVT
+    url: 88/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  92:
+    type: MVT
+    url: 92/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  95:
+    type: MVT
+    url: 95/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  96:
+    type: MVT
+    url: 96/{z}/{x}/{y}.mvt
+    max_zoom: 14
+  ort:
+    type: Raster
+    url: //cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg
+    max_zoom: 4
+layers:
+  ort:
+    data: {source: ort}
+    draw:
+      raster:
+        color: [0.3, 0.3, 0.3]
+        order: 0
+#  01:
+#    data: {source: 01}
+#    draw:
+#      text:
+#        font:
+#          size: 10
+#          fill: yellow
+#        text_source: function() {return '✈ ' + feature.nam;}
+#        color: red
+#        priority: 1
+  l82:
+    data: {source: l82}
+    draw:
+      lines:
+        order: 4
+        color: red
+        width: 1px

@@ -110,27 +110,13 @@ function randomColor(colors) {
 }
 
 map.on('load', function () {
+  // 01: annotation
   map.addSource('01', {
     type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/01/{z}/{x}/{y}.mvt'],
     maxzoom: 14
   });
   var layerColor = '#' + randomColor(lightColors);
-  map.addLayer({
-    'id': '01-lines',
-    'type': 'line',
-    'source': '01',
-    'source-layer': '01',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': layerColor,
-      'line-width': 1
-    }
-  });
-
   map.addLayer({
     'id': '01-pts',
     'type': 'circle',
@@ -142,7 +128,6 @@ map.on('load', function () {
       'circle-radius': 2
     }
   });
-  layers.lines.push('01-lines');
   layers.pts.push('01-pts');
 
   map.addSource('21', {

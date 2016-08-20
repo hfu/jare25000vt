@@ -13,171 +13,57 @@ body { margin:0; padding:0; }
 </style>
 </head>
 <body>
-<style>
-#menu {
-  position: absolute;
-  top:10px;
-  right:10px;
-  z-index: 1;
-  color: white;
-  cursor: pointer;
-}
-#menu-container {
-  position: absolute;
-  display: none;
-  top: 50px;
-  right: 10px;
-  z-index: 1;
-  background-color: white;
-  padding: 20px;
-}
-</style>
-
-<div id="menu"><span class='icon menu big'></span></div>
-<div id="menu-container">
-  <h4>Filter</h4>
-  <div id="menu-filter" onchange="menuFilter()" class='rounded-toggle short inline'>
-    <input id='filter-all' type='radio' name='rtoggle' value='all' checked='checked'>
-    <label for='filter-all'>all</label>
-    <input id='filter-lines' type='radio' name='rtoggle' value='lines'>
-    <label for='filter-lines'>lines</label>
-    <input id='filter-pts' type='radio' name='rtoggle' value='pts'>
-    <label for='filter-pts'>points</label>
-  </div>
-</div>
-
-<script>
-var menuBtn = document.querySelector("#menu");
-var menu = document.querySelector("#menu-container");
-menuBtn.addEventListener('click', function() {
-  if (menuBtn.className.indexOf('active') > -1) {
-    menuBtn.className = '';
-    menu.style.display = 'none';
-  } else {
-    menuBtn.className = 'active';
-    menu.style.display = 'block';
-  }
-}, false);
-
-function menuFilter() {
-  if (document.querySelector("#filter-all").checked) {
-    paint(layers.pts, 'visible');
-    paint(layers.lines, 'visible');
-  } else if (document.querySelector("#filter-pts").checked) {
-    paint(layers.pts, 'visible');
-    paint(layers.lines, 'none');
-  } else if (document.querySelector("#filter-lines").checked) {
-    paint(layers.pts, 'none');
-    paint(layers.lines, 'visible');
-  }
-
-  function paint(layers, val) {
-    layers.forEach(function(layer) {
-      map.setLayoutProperty(layer, 'visibility', val)
-    });
-  }
-}
-
-</script>
 <div id='map'></div>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiaGZ1IiwiYSI6ImlRSGJVUTAifQ.rTx380smyvPc1gUfZv1cmw';
-scheme = 'https://';
-var map = new mapboxgl.Map({
-  container: 'map', style: 'mapbox://styles/mapbox/dark-v8',
-  center: [44.593506,-67.954024], zoom: 14, hash: true, maxZoom: 30
+map = new mapboxgl.Map({
+  container: 'map', style: 'mapbox://styles/mapbox/light-v9',
+  center: [39.5772,  -69.0061], zoom: 13, hash: true, maxZoom: 30
 });
-
-var layers = {pts: [], lines: []}
-
-var lightColors = [
-  'FC49A3', // pink
-  'CC66FF', // purple-ish
-  '66CCFF', // sky blue
-  '66FFCC', // teal
-  '00FF00', // lime green
-  'FFCC66', // light orange
-  'FF6666', // salmon
-  'FF0000', // red
-  'FF8000', // orange
-  'FFFF66', // yellow
-  '00FFFF'  // turquoise
+colors = [
+  'FC49A3', 'CC66FF', '66CCFF', '66FFCC',
+  '00FF00', 'FFCC66', 'FF6666', 'FF0000',
+  'FF8000', 'FFFF66', '00FFFF'
 ];
-
-function randomColor(colors) {
-  var randomNumber = parseInt(Math.random() * colors.length);
-  return colors[randomNumber];
+function randomColor() {
+  return '#' + colors[parseInt(Math.random() * colors.length)];
 }
-
 map.on('load', function () {
   // 01: annotation
   map.addSource('01', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/01/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
-    'id': '01-pts',
-    'type': 'symbol',
-    'source': '01',
-    'source-layer': '01',
-//    'filter': ["==", "$type", "Point"],
+    'id': '01-pts', 'type': 'symbol',
+    'source': '01', 'source-layer': '01',
     'paint': {
-      'text-color': '#ffffff'
+      'text-color': '#222222'
     },
     'layout': {
-      'icon-image': 'monument-15',
       'text-field': '{NAME}{漢字}',
-      'text-offset': [0, 0.6],
-      'text-anchor': 'top',
     }
   });
-  layers.pts.push('01-pts');
-
+  // 21: control point
   map.addSource('21', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/21/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
-    'id': '21-lines',
-    'type': 'line',
-    'source': '21',
-    'source-layer': '21',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
+    'id': '21-pts', 'type': 'symbol',
+    'source': '21', 'source-layer': '21',
+    'paint': {
+      'text-color': '#2222ff'
     },
-    'paint': {
-      'line-color': layerColor,
-      'line-width': 1
+    'layout': {
+      'text-field': '{HYOUKOU}{標高}',
     }
   });
-
-  map.addLayer({
-    'id': '21-pts',
-    'type': 'circle',
-    'source': '21',
-    'source-layer': '21',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('21-lines');
-  layers.pts.push('21-pts');
-
+  // 31: coast line
   map.addSource('31', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/31/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
     'id': '31-lines',
     'type': 'line',
@@ -188,33 +74,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': '#000088',
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '31-pts',
-    'type': 'circle',
-    'source': '31',
-    'source-layer': '31',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('31-lines');
-  layers.pts.push('31-pts');
-
+  // 32: river centerline
   map.addSource('32', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/32/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
     'id': '32-lines',
     'type': 'line',
@@ -225,33 +93,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '32-pts',
-    'type': 'circle',
-    'source': '32',
-    'source-layer': '32',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('32-lines');
-  layers.pts.push('32-pts');
-
+  // 51: buildings
   map.addSource('51', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/51/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
     'id': '51-lines',
     'type': 'line',
@@ -262,47 +112,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': '#ffcccc',
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '51-pts',
-    'type': 'circle',
-    'source': '51',
-    'source-layer': '51',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('51-lines');
-  layers.pts.push('51-pts');
-
+  // 81: elevation point
   map.addSource('81', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/81/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-  var layerColor = '#' + randomColor(lightColors);
-  map.addLayer({
-    'id': '81-lines',
-    'type': 'line',
-    'source': '81',
-    'source-layer': '81',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': layerColor,
-      'line-width': 1
-    }
-  });
-
   map.addLayer({
     'id': '81-pts',
     'type': 'circle',
@@ -310,21 +128,15 @@ map.on('load', function () {
     'source-layer': '81',
     'filter': ["==", "$type", "Point"],
     'paint': {
-      'circle-color': layerColor,
+      'circle-color': randomColor(),
       'circle-radius': 2
     }
   });
-
-  layers.lines.push('81-lines');
-  layers.pts.push('81-pts');
-
+  // 82: contour lines
   map.addSource('82', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/82/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
     'id': '82-lines',
     'type': 'line',
@@ -335,34 +147,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': '#c59952',
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '82-pts',
-    'type': 'circle',
-    'source': '82',
-    'source-layer': '82',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('82-lines');
-  layers.pts.push('82-pts');
-
+  // 83: 凹地方向線
   map.addSource('83', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/83/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
-
   map.addLayer({
     'id': '83-lines',
     'type': 'line',
@@ -373,34 +166,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '83-pts',
-    'type': 'circle',
-    'source': '83',
-    'source-layer': '83',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('83-lines');
-  layers.pts.push('83-pts');
-
+  // 86: 陸部の地形
   map.addSource('86', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/86/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
-
   map.addLayer({
     'id': '86-lines',
     'type': 'line',
@@ -411,32 +185,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '86-pts',
-    'type': 'circle',
-    'source': '86',
-    'source-layer': '86',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('86-lines');
-  layers.pts.push('86-pts');
-
+  // 88: 崖等
   map.addSource('88', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/88/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-  var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
     'id': '88-lines',
     'type': 'line',
@@ -447,34 +204,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '88-pts',
-    'type': 'circle',
-    'source': '88',
-    'source-layer': '88',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('88-lines');
-  layers.pts.push('88-pts');
-
+  // 92: 等高線
   map.addSource('92', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/92/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
-
   map.addLayer({
     'id': '92-lines',
     'type': 'line',
@@ -485,34 +223,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '92-pts',
-    'type': 'circle',
-    'source': '92',
-    'source-layer': '92',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('92-lines');
-  layers.pts.push('92-pts');
-
+  // 95: 露岩域
   map.addSource('95', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/95/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-
-  var layerColor = '#' + randomColor(lightColors);
-
   map.addLayer({
     'id': '95-lines',
     'type': 'line',
@@ -523,33 +242,15 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '95-pts',
-    'type': 'circle',
-    'source': '95',
-    'source-layer': '95',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('95-lines');
-  layers.pts.push('95-pts');
-
+  // 96: 氷雪域
   map.addSource('96', {
-    type: 'vector',
     tiles: ['https://hfu.github.io/jare25000vt/96/{z}/{x}/{y}.pbf'],
-    maxzoom: 14
+    type: 'vector', maxzoom: 14
   });
-  var layerColor = '#' + randomColor(lightColors);
-
   map.addLayer({
     'id': '96-lines',
     'type': 'line',
@@ -560,25 +261,10 @@ map.on('load', function () {
       'line-cap': 'round'
     },
     'paint': {
-      'line-color': layerColor,
+      'line-color': randomColor(),
       'line-width': 1
     }
   });
-
-  map.addLayer({
-    'id': '96-pts',
-    'type': 'circle',
-    'source': '96',
-    'source-layer': '96',
-    'filter': ["==", "$type", "Point"],
-    'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
-    }
-  });
-
-  layers.lines.push('96-lines');
-  layers.pts.push('96-pts');
 });
 </script>
 </body>

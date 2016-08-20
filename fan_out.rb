@@ -13,9 +13,9 @@ Dir.glob('*.mbtiles') {|fn|
     data = r[:tile_data]
     dir = [t, z, x].join('/')
     FileUtils::mkdir_p(dir) unless File.directory?(dir)
-    File.open("#{dir}/#{y}.mvt", 'w') {|w|
+    File.open("#{dir}/#{y}.pbf", 'w') {|w|
       w.print Zlib::GzipReader.new(StringIO.new(data)).read
     }
-    print "wrote #{dir}/#{y}.mvt\n"
+    print "wrote #{dir}/#{y}.pbf\n"
   }
 }

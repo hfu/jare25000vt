@@ -113,7 +113,7 @@ map.on('load', function () {
   // 01: annotation
   map.addSource('01', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/01/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/01/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
   var layerColor = '#' + randomColor(lightColors);
@@ -122,17 +122,21 @@ map.on('load', function () {
     'type': 'circle',
     'source': '01',
     'source-layer': '01',
-    'filter': ["==", "$type", "Point"],
+//    'filter': ["==", "$type", "Point"],
     'paint': {
       'circle-color': layerColor,
       'circle-radius': 2
+    },
+    'layout': {
+      'text-field': '{NAME}',
+      'text-anchor': 'top'
     }
   });
   layers.pts.push('01-pts');
 
   map.addSource('21', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/21/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/21/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
   var layerColor = '#' + randomColor(lightColors);
@@ -168,7 +172,7 @@ map.on('load', function () {
 
   map.addSource('31', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/31/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/31/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -205,7 +209,7 @@ map.on('load', function () {
 
   map.addSource('32', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/32/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/32/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -242,7 +246,7 @@ map.on('load', function () {
 
   map.addSource('51', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/51/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/51/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -279,7 +283,7 @@ map.on('load', function () {
 
   map.addSource('81', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/81/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/81/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
   var layerColor = '#' + randomColor(lightColors);
@@ -315,7 +319,7 @@ map.on('load', function () {
 
   map.addSource('82', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/82/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/82/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -352,7 +356,7 @@ map.on('load', function () {
 
   map.addSource('83', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/83/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/83/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -390,7 +394,7 @@ map.on('load', function () {
 
   map.addSource('86', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/86/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/86/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -428,7 +432,7 @@ map.on('load', function () {
 
   map.addSource('88', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/88/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/88/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
   var layerColor = '#' + randomColor(lightColors);
@@ -464,7 +468,7 @@ map.on('load', function () {
 
   map.addSource('92', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/92/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/92/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -502,7 +506,7 @@ map.on('load', function () {
 
   map.addSource('95', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/95/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/95/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
 
@@ -540,7 +544,7 @@ map.on('load', function () {
 
   map.addSource('96', {
     type: 'vector',
-    tiles: ['https://hfu.github.io/jare25000vt/96/{z}/{x}/{y}.mvt'],
+    tiles: ['https://hfu.github.io/jare25000vt/96/{z}/{x}/{y}.pbf'],
     maxzoom: 14
   });
   var layerColor = '#' + randomColor(lightColors);

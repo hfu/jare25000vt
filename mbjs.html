@@ -119,17 +119,18 @@ map.on('load', function () {
   var layerColor = '#' + randomColor(lightColors);
   map.addLayer({
     'id': '01-pts',
-    'type': 'circle',
+    'type': 'symbol',
     'source': '01',
     'source-layer': '01',
 //    'filter': ["==", "$type", "Point"],
     'paint': {
-      'circle-color': layerColor,
-      'circle-radius': 2
+      'text-color': '#ffffff'
     },
     'layout': {
-      'text-field': '{NAME}',
-      'text-anchor': 'top'
+      'icon-image': 'monument-15',
+      'text-field': '{NAME}{漢字}',
+      'text-offset': [0, 0.6],
+      'text-anchor': 'top',
     }
   });
   layers.pts.push('01-pts');
@@ -567,7 +568,7 @@ map.on('load', function () {
   map.addLayer({
     'id': '96-pts',
     'type': 'circle',
-    'source': '96.mbtiles',
+    'source': '96',
     'source-layer': '96',
     'filter': ["==", "$type", "Point"],
     'paint': {
